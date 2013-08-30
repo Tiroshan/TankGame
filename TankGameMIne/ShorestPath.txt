@@ -1,0 +1,244 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Core;
+
+import IOHandler.Writer;
+import Interface.CoinPack;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import sun.misc.Queue;
+
+/**
+ *
+ * @author Tyron Madushan
+ */
+public class shortestPath {
+    
+    private Queue coinsQueue;
+    private CoinPack tempCoin;
+    private String [][] map;
+    private int ourPlayerX;
+    private int ourPlayerY;
+    private Thread t;
+    private Writer write;
+    private boolean action;
+    private boolean coinStatus;
+    private int direction;
+    
+//    public shortestPath(String[][] tempmap){  
+//        coinsQueue=new Queue();
+//        map=tempmap;
+//    }
+    
+    public shortestPath(Writer tempWriter){  
+        coinsQueue=new Queue();
+        map=new String[20][20];
+        write=tempWriter;
+        action=true;
+        coinStatus= false;
+    }
+    
+    public void setCoinMap(CoinPack coin){
+        coinsQueue.enqueue(coin);
+    }
+    
+    public void updateMap(String[][] UpdateMap){
+        map=UpdateMap;
+        coinStatus= true;
+    }
+    
+    public void SetOurPlayerCordinates(int oX,int oY,int dir){
+        ourPlayerX=oX;
+        ourPlayerY=oY;
+        direction=dir;
+    }
+    
+    public boolean IsThinking(){
+        return action;
+    }
+    
+    public void think() throws InterruptedException, UnknownHostException, IOException{
+        action=false;
+        tempCoin=(CoinPack) coinsQueue.dequeue();
+        if(tempCoin==null) coinStatus=false;
+        
+        if(coinStatus){
+            if(ourPlayerX>tempCoin.X()&&ourPlayerY>tempCoin.Y()){
+                int LeftSteps=Math.abs(ourPlayerY-tempCoin.Y());
+                int UpSteps=Math.abs(ourPlayerX-tempCoin.X());
+                
+                if(direction==0){
+                    while(UpSteps!=0&&LeftSteps!=0){
+                            LeftSteps+=1;
+                            while(UpSteps>0){
+                                if(!"B".equals(map[ourPlayerX-1][ourPlayerY])||!"S".equals(map[ourPlayerX-1][ourPlayerY])||!"W".equals(map[ourPlayerX-1][ourPlayerY])){
+                                    System.out.println("up");
+                                    write.SetSteps("UP");
+                                   // write.MoveUp();
+                                    UpSteps--;
+                                }
+                                else {
+                                    UpSteps+=1;
+                                    break;
+                                }
+                            }
+                            while(LeftSteps>0){
+                                if(!"B".equals(map[ourPlayerX][ourPlayerY-1])||!"S".equals(map[ourPlayerX][ourPlayerY-1])||!"W".equals(map[ourPlayerX][ourPlayerY-1])){
+                                    System.out.println("left");
+                                    write.SetSteps("LEFT");
+                                   // write.TurnLeft();
+                                    LeftSteps--;
+                                }
+                                else {
+                                    LeftSteps+=1;
+                                    break;
+                                }
+                            }
+                        }      
+                }
+                else if(direction==1){
+                    
+                    while(UpSteps!=0&&LeftSteps!=0){
+                            LeftSteps+=2;
+                            UpSteps+=1;
+                            while(UpSteps>0){
+                                if(!"B".equals(map[ourPlayerX-1][ourPlayerY])||!"S".equals(map[ourPlayerX-1][ourPlayerY])||!"W".equals(map[ourPlayerX-1][ourPlayerY])){
+                                    System.out.println("up");
+                                    write.SetSteps("UP");
+                                 //   write.MoveUp();
+                                    UpSteps--;
+                                }
+                                else {
+                                    UpSteps+=1;
+                                    break;
+                                }
+                            }
+                            while(LeftSteps>0){
+                                if(!"B".equals(map[ourPlayerX][ourPlayerY-1])||!"S".equals(map[ourPlayerX][ourPlayerY-1])||!"W".equals(map[ourPlayerX][ourPlayerY-1])){
+                                    System.out.println("left");
+                                    write.SetSteps("LEFT");
+                                  //  write.TurnLeft();
+                                    LeftSteps--;
+                                }
+                                else {
+                                    LeftSteps+=1;
+                                    break;
+                                }
+                            }
+                        }
+                    
+                }
+                else if(direction==2){
+                    System.out.println("right");                    
+                    while(UpSteps!=0&&LeftSteps!=0){
+                            UpSteps+=1;
+                            while(LeftSteps>0){
+                                if(!"B".equals(map[ourPlayerX][ourPlayerY-1])||!"S".equals(map[ourPlayerX][ourPlayerY-1])||!"W".equals(map[ourPlayerX][ourPlayerY-1])){
+                                    System.out.println("left");
+                                    write.SetSteps("LEFT");
+                                //    write.TurnLeft();
+                                    LeftSteps--;
+                                }
+                                else {
+                                    LeftSteps+=1;
+                                    break;
+                                }
+                            }
+                            while(UpSteps>0){
+                                if(!"B".equals(map[ourPlayerX-1][ourPlayerY])||!"S".equals(map[ourPlayerX-1][ourPlayerY])||!"W".equals(map[ourPlayerX-1][ourPlayerY])){
+                                    System.out.println("up");
+                                    write.SetSteps("UP");
+                                 //   write.MoveUp();
+                                    UpSteps--;
+                                }
+                                else {
+                                    UpSteps+=1;
+                                    break;
+                                }
+                            }
+                         
+                        }
+                    
+                }
+                else if(direction==3){
+                    
+                    while(UpSteps!=0&&LeftSteps!=0){
+                            LeftSteps+=1;
+                            while(UpSteps>0){
+                                if(!"B".equals(map[ourPlayerX-1][ourPlayerY])||!"S".equals(map[ourPlayerX-1][ourPlayerY])||!"W".equals(map[ourPlayerX-1][ourPlayerY])){
+                                    System.out.println("up");
+                                    write.SetSteps("UP");
+                                  //  write.MoveUp();
+                                    UpSteps--;
+                                }
+                                else {
+                                    UpSteps+=1;
+                                    break;
+                                }
+                            }
+                            while(LeftSteps>0){
+                                if(!"B".equals(map[ourPlayerX][ourPlayerY-1])||!"S".equals(map[ourPlayerX][ourPlayerY-1])||!"W".equals(map[ourPlayerX][ourPlayerY-1])){
+                                    System.out.println("left");
+                                    write.SetSteps("LEFT");
+                                 //   write.TurnLeft();
+                                    LeftSteps--;
+                                }
+                                else {
+                                    LeftSteps+=1;
+                                    break;
+                                }
+                            }
+                        }
+                    
+                    
+                }
+                
+            }
+            
+            else if(ourPlayerX<tempCoin.X()&&ourPlayerY>tempCoin.Y()){
+                int LeftSteps=Math.abs(ourPlayerY-tempCoin.Y());
+                int DownSteps=Math.abs(ourPlayerX-tempCoin.X());
+               // write.CreateConnection();
+                while(DownSteps+1>0){
+                    //write.MoveDown();
+                    //if(map[][])
+                    System.out.println("down");
+                    write.SetSteps("DOWN");
+                    DownSteps--;
+                }
+              //  write.CloseConnection();
+            }
+            
+            else if(ourPlayerX>tempCoin.x()&&ourPlayerY<tempCoin.Y()){
+                int RightSteps=Math.abs(ourPlayerY-tempCoin.Y());
+                int UpSteps=Math.abs(ourPlayerX-tempCoin.X());
+                //write.CreateConnection();
+                while(UpSteps+1>0){
+                    //write.MoveUp();
+                    System.out.println("up");
+                    UpSteps--;
+                }
+               // write.CloseConnection();
+            }
+            
+            else if(ourPlayerX<tempCoin.x()&&ourPlayerY<tempCoin.Y()){
+                int RightSteps=Math.abs(ourPlayerY-tempCoin.Y());
+                int DownSteps=Math.abs(ourPlayerX-tempCoin.X());
+                //write.CreateConnection();
+                while(DownSteps+1>0){
+                   // write.MoveDown();
+                    System.out.println("up");
+                    DownSteps--;
+                }
+               // write.CloseConnection();
+            }
+        }
+        else System.out.println("coin empty");
+        
+        action=true;
+        
+    }
+}
+
